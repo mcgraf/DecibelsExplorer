@@ -5,6 +5,7 @@ import { Volume2, Menu } from "lucide-react";
 
 const navItems = [
   { href: "#basics", label: "Basics" },
+  { href: "#visualization", label: "Visualization" },
   { href: "#scale", label: "Scale" },
   { href: "#calculator", label: "Calculator" },
   { href: "#exercises", label: "Exercises" },

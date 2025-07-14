@@ -1,4 +1,5 @@
 import { Navigation } from "@/components/navigation";
+import { DecibelVisualization } from "@/components/decibel-visualization";
 import { DecibelScale } from "@/components/decibel-scale";
 import { DecibelCalculator } from "@/components/decibel-calculator";
 import { InteractiveExercises } from "@/components/interactive-exercises";
@@ -145,6 +146,7 @@ export default function Home() {
       </section>
 
       {/* Interactive Components */}
+      <DecibelVisualization />
       <DecibelScale />
       <DecibelCalculator />
       <InteractiveExercises />
@@ -166,6 +168,7 @@ export default function Home() {
             <div>
               <h3 className="text-lg font-semibold mb-4">Tools</h3>
               <ul className="space-y-2 text-sm">
+                <li><button onClick={() => handleScrollTo('visualization')} className="hover:text-blue-300 transition-colors">Visual Comparison</button></li>
                 <li><button onClick={() => handleScrollTo('calculator')} className="hover:text-blue-300 transition-colors">dB Calculator</button></li>
                 <li><button onClick={() => handleScrollTo('scale')} className="hover:text-blue-300 transition-colors">Interactive Scale</button></li>
                 <li><button onClick={() => handleScrollTo('exercises')} className="hover:text-blue-300 transition-colors">Practice Exercises</button></li>
