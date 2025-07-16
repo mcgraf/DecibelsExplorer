@@ -42,7 +42,7 @@ export default function Home() {
             <Button 
               size="lg"
               variant="outline"
-              className="border-white hover:bg-white hover:text-primary text-white"
+              className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-blue-600 font-semibold"
               onClick={() => handleScrollTo('calculator')}
             >
               Quick Calculator
