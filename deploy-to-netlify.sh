@@ -5,7 +5,7 @@ echo "🔊 Building Decibel Learning App for Netlify..."
 
 # Build the static site
 echo "📦 Building static site..."
-npm run build
+vite build
 
 # Check if build was successful
 if [ $? -eq 0 ]; then

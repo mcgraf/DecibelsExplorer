@@ -20,7 +20,7 @@ git push -u origin main
 2. Click "New site from Git"
 3. Choose GitHub and select your repository
 4. Configure build settings:
-   - **Build command**: `npm run build:static`
+   - **Build command**: `vite build`
    - **Publish directory**: `dist/public`
    - **Node version**: 18
 5. Click "Deploy site"
@@ -30,7 +30,7 @@ git push -u origin main
 ### Step 1: Build the Static Site
 1. In your project directory, run:
 ```bash
-npm run build:static
+vite build
 ```
 
 ### Step 2: Deploy to Netlify
@@ -49,7 +49,7 @@ npm install -g netlify-cli
 ### Step 2: Login and Deploy
 ```bash
 netlify login
-npm run build:static
+vite build
 netlify deploy
 # For production deployment:
 netlify deploy --prod
@@ -90,7 +90,7 @@ If you need environment variables:
 
 ## Build Configuration
 The `netlify.toml` file is already configured with:
-- Build command: `npm run build:static`
+- Build command: `vite build`
 - Publish directory: `dist/public`
 - Redirect rules for single-page app routing
 
