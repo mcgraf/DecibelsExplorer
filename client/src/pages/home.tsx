@@ -24,9 +24,9 @@ export default function Home() {
       {/* Hero Section */}
       <section className="gradient-primary text-primary-foreground py-16">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6">
             Master the Decibel Scale
-          </h2>
+          </h1>
           <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
             Learn how sound intensity is measured using the logarithmic decibel scale. 
             Explore real-world examples, interactive calculators, and extreme scenarios.
@@ -52,10 +52,10 @@ export default function Home() {
       </section>
 
       {/* Basics Section */}
-      <section id="basics" className="py-16 bg-white">
+      <section id="basics" className="py-16 bg-white" aria-labelledby="basics-heading">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12 text-neutral">
-            Understanding Decibels
+          <h2 id="basics-heading" className="text-3xl font-bold text-center mb-12 text-neutral">
+            Understanding Decibels: The Logarithmic Scale
           </h2>
           
           <div className="grid md:grid-cols-2 gap-8 mb-12">
@@ -66,8 +66,9 @@ export default function Home() {
                   <h3 className="text-xl font-semibold">What Are Decibels?</h3>
                 </div>
                 <p className="text-muted-foreground mb-4">
-                  Decibels (dB) are a logarithmic unit used to measure sound intensity. 
-                  Unlike linear scales, each 10 dB increase represents a 10-fold increase in energy.
+                  Decibels (dB) are a logarithmic unit used to measure sound intensity and power ratios. 
+                  Unlike linear scales, each 10 dB increase represents a 10-fold increase in sound energy, 
+                  making it perfect for measuring the vast range of human hearing from whispers to jet engines.
                 </p>
                 <Card className="bg-blue-50">
                   <CardContent className="p-4">
@@ -146,11 +147,30 @@ export default function Home() {
       </section>
 
       {/* Interactive Components */}
-      <DecibelVisualization />
-      <DecibelScale />
-      <DecibelCalculator />
-      <InteractiveExercises />
-      <ExtremeCalculator />
+      <section id="visualization" aria-labelledby="visualization-heading">
+        <h2 id="visualization-heading" className="sr-only">Decibel Visualization and Learning Tools</h2>
+        <DecibelVisualization />
+      </section>
+      
+      <section id="scale" aria-labelledby="scale-heading">
+        <h2 id="scale-heading" className="sr-only">Interactive Decibel Scale with Real-World Examples</h2>
+        <DecibelScale />
+      </section>
+      
+      <section id="calculator" aria-labelledby="calculator-heading">
+        <h2 id="calculator-heading" className="sr-only">Decibel Calculator and Energy Conversion Tools</h2>
+        <DecibelCalculator />
+      </section>
+      
+      <section id="exercises" aria-labelledby="exercises-heading">
+        <h2 id="exercises-heading" className="sr-only">Interactive Decibel Learning Exercises and Quizzes</h2>
+        <InteractiveExercises />
+      </section>
+      
+      <section id="extreme" aria-labelledby="extreme-heading">
+        <h2 id="extreme-heading" className="sr-only">Extreme Decibel Calculator for Cosmic-Level Scenarios</h2>
+        <ExtremeCalculator />
+      </section>
 
       {/* Footer */}
       <footer className="bg-neutral text-white py-12">
