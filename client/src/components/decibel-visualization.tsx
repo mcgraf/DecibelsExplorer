@@ -42,11 +42,16 @@ export function DecibelVisualization() {
     }, 1500);
   };
 
-  // Calculate bar heights for visualization (logarithmic scale)
+  // Calculate bar heights for visualization (improved scaling)
   const getBarHeight = (decibel: number) => {
-    const intensity = calculateIntensityFromDecibel(decibel);
-    const maxIntensity = calculateIntensityFromDecibel(60); // Reference for scaling
-    return Math.min((Math.log10(intensity / 1e-12) / Math.log10(maxIntensity / 1e-12)) * 100, 100);
+    // Use a more intuitive scaling where each 10 dB roughly doubles the visual height
+    const minHeight = 20; // Minimum height for visibility
+    const maxHeight = 180; // Maximum height for the container
+    const heightRange = maxHeight - minHeight;
+    
+    // Logarithmic scaling that makes differences more visible
+    const scaledHeight = (decibel / 80) * heightRange;
+    return Math.max(minHeight, Math.min(scaledHeight + minHeight, maxHeight));
   };
 
   const getEnergyBlocks = (decibel: number) => {
@@ -124,33 +129,86 @@ export function DecibelVisualization() {
               </div>
 
               {/* Visual Bar Chart */}
-              <Card className="bg-white">
+              <Card className="bg-gradient-to-br from-gray-50 to-gray-100 border-2">
                 <CardContent className="p-6">
-                  <h4 className="font-semibold mb-4 text-center">Energy Intensity Comparison</h4>
-                  <div className="flex items-end justify-center space-x-8 h-32">
-                    <div className="flex flex-col items-center">
-                      <div 
-                        className="w-16 bg-gradient-to-t from-blue-500 to-blue-300 transition-all duration-500 rounded-t-md"
-                        style={{ height: `${getBarHeight(baseDecibel)}%` }}
-                      />
-                      <div className="mt-2 text-center">
-                        <div className="text-sm font-medium">{baseDecibel} dB</div>
-                        <div className="text-xs text-muted-foreground">
+                  <h4 className="font-semibold mb-6 text-center text-lg">Energy Intensity Comparison</h4>
+                  <div className="flex items-end justify-center space-x-12 h-56 mb-4 relative">
+                    {/* Grid lines for reference */}
+                    <div className="absolute inset-0 pointer-events-none">
+                      {[25, 50, 75].map((percentage) => (
+                        <div
+                          key={percentage}
+                          className="absolute w-full border-t border-gray-200 border-dashed"
+                          style={{ bottom: `${percentage}%` }}
+                        />
+                      ))}
+                    </div>
+                    
+                    <div className="flex flex-col items-center relative z-10">
+                      <div className="relative">
+                        <div 
+                          className="w-20 bg-gradient-to-t from-blue-600 via-blue-500 to-blue-400 transition-all duration-700 rounded-t-lg shadow-lg border-2 border-blue-700 relative overflow-hidden"
+                          style={{ height: `${getBarHeight(baseDecibel)}px` }}
+                        >
+                          {/* Animated shine effect */}
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-20 animate-pulse"></div>
+                        </div>
+                        <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium shadow-lg">
                           {formatScientificNotation(baseIntensity)} W/m²
                         </div>
                       </div>
+                      <div className="mt-4 text-center">
+                        <div className="text-lg font-bold text-blue-600">{baseDecibel} dB</div>
+                        <div className="text-sm text-muted-foreground">Base Level</div>
+                      </div>
                     </div>
                     
-                    <div className="flex flex-col items-center">
-                      <div 
-                        className="w-16 bg-gradient-to-t from-orange-500 to-orange-300 transition-all duration-500 rounded-t-md"
-                        style={{ height: `${getBarHeight(compareDecibel)}%` }}
-                      />
-                      <div className="mt-2 text-center">
-                        <div className="text-sm font-medium">{compareDecibel} dB</div>
-                        <div className="text-xs text-muted-foreground">
+                    <div className="flex flex-col items-center justify-center h-full relative z-10">
+                      <div className="bg-white rounded-full p-4 shadow-lg border-2 border-gray-300 relative">
+                        <div className="text-2xl font-bold text-primary">
+                          {energyRatio.toFixed(1)}×
+                        </div>
+                        {/* Pulsing ring effect */}
+                        <div className="absolute inset-0 rounded-full border-2 border-primary animate-ping opacity-30"></div>
+                      </div>
+                      <div className="text-xs text-muted-foreground mt-2 font-medium">energy ratio</div>
+                    </div>
+                    
+                    <div className="flex flex-col items-center relative z-10">
+                      <div className="relative">
+                        <div 
+                          className="w-20 bg-gradient-to-t from-orange-600 via-orange-500 to-orange-400 transition-all duration-700 rounded-t-lg shadow-lg border-2 border-orange-700 relative overflow-hidden"
+                          style={{ height: `${getBarHeight(compareDecibel)}px` }}
+                        >
+                          {/* Animated shine effect */}
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-20 animate-pulse"></div>
+                        </div>
+                        <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-orange-600 text-white px-2 py-1 rounded text-xs font-medium shadow-lg">
                           {formatScientificNotation(compareIntensity)} W/m²
                         </div>
+                      </div>
+                      <div className="mt-4 text-center">
+                        <div className="text-lg font-bold text-orange-600">{compareDecibel} dB</div>
+                        <div className="text-sm text-muted-foreground">Compare Level</div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Enhanced visual explanation */}
+                  <div className="bg-white rounded-lg p-4 border-2 border-gray-200">
+                    <div className="flex items-center justify-center space-x-4 text-sm">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-4 h-4 bg-gradient-to-t from-blue-600 to-blue-400 rounded"></div>
+                        <span>Base: {baseDecibel} dB</span>
+                      </div>
+                      <div className="text-gray-400">→</div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-4 h-4 bg-gradient-to-t from-orange-600 to-orange-400 rounded"></div>
+                        <span>Compare: {compareDecibel} dB</span>
+                      </div>
+                      <div className="text-gray-400">→</div>
+                      <div className="font-semibold text-primary">
+                        {energyRatio.toFixed(1)}× more energy
                       </div>
                     </div>
                   </div>
