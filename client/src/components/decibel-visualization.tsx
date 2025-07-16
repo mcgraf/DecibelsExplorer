@@ -19,11 +19,11 @@ export function DecibelVisualization() {
 
   // Animation demo values
   const demoValues = [
-    { db: 10, label: "10 dB" },
-    { db: 20, label: "20 dB (10× energy)" },
-    { db: 30, label: "30 dB (100× energy)" },
-    { db: 40, label: "40 dB (1,000× energy)" },
-    { db: 50, label: "50 dB (10,000× energy)" }
+    { db: 10, label: "10 dB", energyMultiplier: 1, description: "Starting point" },
+    { db: 20, label: "20 dB", energyMultiplier: 10, description: "10× more energy" },
+    { db: 30, label: "30 dB", energyMultiplier: 100, description: "100× more energy" },
+    { db: 40, label: "40 dB", energyMultiplier: 1000, description: "1,000× more energy" },
+    { db: 50, label: "50 dB", energyMultiplier: 10000, description: "10,000× more energy" }
   ];
 
   const startAnimation = () => {
@@ -164,7 +164,7 @@ export function DecibelVisualization() {
             <CardHeader>
               <CardTitle className="flex items-center gap-3">
                 <Play className="h-6 w-6 text-accent" />
-                Logarithmic Scale Animation
+                The 10 dB Rule: Energy Multiplication
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -174,57 +174,83 @@ export function DecibelVisualization() {
                   disabled={isAnimating}
                   className="bg-accent hover:bg-accent/80"
                 >
-                  {isAnimating ? "Animating..." : "Show 10 dB Rule"}
+                  {isAnimating ? "Playing Animation..." : "Show 10 dB Rule"}
                 </Button>
                 <p className="text-sm text-muted-foreground mt-2">
-                  Watch how energy increases exponentially with each 10 dB step
+                  Watch how energy multiplies by 10 with each 10 dB increase
                 </p>
               </div>
+
+              {/* Current Animation Step Display */}
+              {isAnimating && (
+                <Card className="bg-blue-50 border-blue-200">
+                  <CardContent className="p-4 text-center">
+                    <div className="text-lg font-bold text-blue-800">
+                      {animationStep === 0 ? "Starting at 10 dB" : 
+                       `${demoValues[animationStep].db} dB = ${demoValues[animationStep].energyMultiplier}× the energy of 10 dB`}
+                    </div>
+                    <div className="text-sm text-blue-600 mt-1">
+                      {demoValues[animationStep].description}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
 
               <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                 {demoValues.map((demo, index) => (
                   <Card 
                     key={index}
-                    className={`transition-all duration-500 ${
+                    className={`transition-all duration-1000 ${
                       animationStep >= index 
-                        ? 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-300 scale-105' 
-                        : 'bg-gray-50'
+                        ? 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-300 scale-105 shadow-lg' 
+                        : 'bg-gray-50 border-gray-200'
                     }`}
                   >
                     <CardContent className="p-4 text-center">
                       <div className="mb-3">
-                        <div className="text-lg font-bold text-primary">{demo.db} dB</div>
+                        <div className={`text-xl font-bold transition-colors duration-500 ${
+                          animationStep >= index ? 'text-green-700' : 'text-gray-500'
+                        }`}>
+                          {demo.db} dB
+                        </div>
                       </div>
                       
-                      {/* Energy blocks visualization */}
-                      <div className="space-y-2">
-                        <div className="text-xs text-muted-foreground">Energy blocks:</div>
-                        <div className="grid grid-cols-4 gap-1">
-                          {Array.from({ length: Math.min(getEnergyBlocks(demo.db), 16) }).map((_, i) => (
-                            <div
-                              key={i}
-                              className={`w-2 h-2 rounded-sm transition-all duration-300 ${
-                                animationStep >= index 
-                                  ? 'bg-green-500 scale-110' 
-                                  : 'bg-gray-300'
-                              }`}
-                            />
-                          ))}
+                      {/* Energy multiplier display */}
+                      <div className="mb-3">
+                        <div className={`text-lg font-semibold transition-colors duration-500 ${
+                          animationStep >= index ? 'text-green-600' : 'text-gray-400'
+                        }`}>
+                          {demo.energyMultiplier}×
                         </div>
-                        {getEnergyBlocks(demo.db) > 16 && (
-                          <div className="text-xs text-muted-foreground">
-                            +{getEnergyBlocks(demo.db) - 16} more...
-                          </div>
-                        )}
+                        <div className="text-xs text-muted-foreground">energy</div>
+                      </div>
+                      
+                      {/* Visual energy representation */}
+                      <div className="space-y-2">
+                        <div className="text-xs text-muted-foreground">Energy level:</div>
+                        <div className="h-8 bg-gray-200 rounded-full overflow-hidden">
+                          <div 
+                            className={`h-full transition-all duration-1000 rounded-full ${
+                              animationStep >= index 
+                                ? 'bg-gradient-to-r from-green-400 to-green-600' 
+                                : 'bg-gray-300'
+                            }`}
+                            style={{ 
+                              width: `${Math.min((Math.log10(demo.energyMultiplier) + 1) * 25, 100)}%`,
+                              transform: animationStep >= index ? 'scaleX(1)' : 'scaleX(0)',
+                              transformOrigin: 'left'
+                            }}
+                          />
+                        </div>
                       </div>
                       
                       <div className="mt-3">
-                        <Badge className={`text-xs ${
+                        <Badge className={`text-xs transition-colors duration-500 ${
                           animationStep >= index 
                             ? 'bg-green-100 text-green-800' 
                             : 'bg-gray-100 text-gray-600'
                         }`}>
-                          {index === 0 ? 'Base' : `${Math.pow(10, index)}× energy`}
+                          {index === 0 ? 'Base level' : `${demo.energyMultiplier}× more`}
                         </Badge>
                       </div>
                     </CardContent>
@@ -232,18 +258,36 @@ export function DecibelVisualization() {
                 ))}
               </div>
 
-              <Card className="bg-yellow-50 border-yellow-200">
-                <CardContent className="p-4 text-center">
-                  <div className="flex items-center justify-center gap-2 mb-2">
-                    <Zap className="h-5 w-5 text-yellow-600" />
-                    <span className="font-semibold text-yellow-800">Key Insight</span>
-                  </div>
-                  <p className="text-sm text-yellow-700">
-                    The logarithmic scale compresses the enormous range of sound intensities into manageable numbers. 
-                    A 2 dB increase represents about 58% more energy, while 10 dB represents 10× more energy!
-                  </p>
-                </CardContent>
-              </Card>
+              {/* Rule explanation */}
+              <div className="grid md:grid-cols-2 gap-4">
+                <Card className="bg-yellow-50 border-yellow-200">
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Zap className="h-5 w-5 text-yellow-600" />
+                      <span className="font-semibold text-yellow-800">The 10 dB Rule</span>
+                    </div>
+                    <p className="text-sm text-yellow-700">
+                      Every 10 dB increase = 10× more energy<br/>
+                      20 dB vs 10 dB = 10× more energy<br/>
+                      30 dB vs 20 dB = 10× more energy<br/>
+                      40 dB vs 30 dB = 10× more energy
+                    </p>
+                  </CardContent>
+                </Card>
+                
+                <Card className="bg-blue-50 border-blue-200">
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Volume2 className="h-5 w-5 text-blue-600" />
+                      <span className="font-semibold text-blue-800">Why This Matters</span>
+                    </div>
+                    <p className="text-sm text-blue-700">
+                      This exponential growth means small dB increases represent huge energy changes. 
+                      A 40 dB sound has 1,000× more energy than a 10 dB sound!
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
             </CardContent>
           </Card>
 
