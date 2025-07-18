@@ -1,6 +1,26 @@
-# Analytics Setup for Decibel Learning App
+# Seline Analytics Setup for Decibel Learning App
 
-This guide shows you where to add analytics tracking code for various analytics providers.
+✅ **Seline Analytics is now configured!** This guide shows you how it's set up and how to customize it further.
+
+## Current Setup
+
+Seline analytics is already installed and configured in your app:
+
+1. **Script added to HTML head** (`client/index.html`)
+2. **Custom tracking utilities** created (`client/src/lib/seline-analytics.ts`)
+3. **Ready for event tracking** in your components
+
+## How to Get Your Project Token
+
+1. Sign up at [seline.com](https://seline.com)
+2. Create a new project for your decibel learning app
+3. Copy your project token from the dashboard
+4. Add it to the script tag in `client/index.html`:
+
+```html
+<!-- Update this line in client/index.html -->
+<script data-token="YOUR_PROJECT_TOKEN" src="https://cdn.seline.so/seline.js" async></script>
+```
 
 ## Option 1: Add to HTML Head (Recommended)
 
